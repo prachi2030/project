@@ -5,6 +5,9 @@
  */
 package rp;
 
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+
 /**
  *
  * @author Prachi Sharma
@@ -123,6 +126,43 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String username = jTextField1.getText();
+        String password = jPasswordField1.getText();
+        try
+        {
+             Class.forName("com.mysql.jdbc.Driver");
+             String database = "jdbc:mysql://localhost:3306/examswing";
+             java.sql.Connection con = DriverManager.getConnection(database,"root","");
+             
+             java.sql.Statement stat = con.createStatement();
+            String query = "select * from register_info where username='"+username+ "'and password='"+password+"'";
+            //System.out.println(query);
+            ResultSet rs = stat.executeQuery(query);
+            
+            if(rs.next())
+            {
+                //System.out.println("You are inside an Application");
+                int Studentid = rs.getInt("id");
+                String stringID = Integer.toString(Studentid);
+                ControlPanel cf = new ControlPanel();
+                cf.setVisible(true);
+                this.setVisible(false);
+                
+            }
+            else
+            {
+                RegisterForm rf = new RegisterForm();
+                rf.setVisible(true);
+                this.setVisible(false);
+                
+                System.out.println("Create Account");
+            }
+           
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
